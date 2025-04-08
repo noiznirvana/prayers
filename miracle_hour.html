@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miracle Hour by Linda Schubert</title>
+    <!-- PWA Manifest Link -->
+    <link rel="manifest" href="miraclemanifest.json">
+    <!-- Theme color for browser UI -->
+    <meta name="theme-color" content="#1e1e1e" /> <!-- Matches dark theme header -->
+    <!-- PWA hints: Make it feel more like an app -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes"> <!-- Still often included for broader iOS compatibility -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MiracleHour"> <!-- iOS specific title for home screen icon -->
+    <!-- Add links for apple-touch-icon if you create them -->
+    <!-- <link rel="apple-touch-icon" href="apple-touch-icon.png"> -->
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS STYLES (Same as previous correct version) --- */
+        /* Basic Reset & Defaults */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: 'Lato', sans-serif; line-height: 1.7; display: flex; flex-direction: column;
+            min-height: 100vh;
+            --bg-color: #121212; --text-color: #e0e0e0; --header-bg: #1e1e1e; --header-text: #f5f5f5;
+            --sidebar-bg: #2a2a2a; --sidebar-text: #e0e0e0; --sidebar-link-hover-bg: #3a3a3a;
+            --sidebar-link-active-bg: #4f4f4f; --accent-color: #bb86fc; --heading-color: var(--accent-color);
+            --footer-bg: #1e1e1e; --footer-text: #aaaaaa; --button-bg: transparent;
+            --button-text: var(--header-text); --button-hover-bg: rgba(255, 255, 255, 0.1);
+            --button-active-bg: rgba(255, 255, 255, 0.15); --image-border: #444444;
+            --blockquote-border: #4f4f4f; --blockquote-text: #aaaaaa; --prayer-bg: #2a2a2a;
+            --prayer-border: var(--accent-color);
+            background-color: var(--bg-color); color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        body.theme-light {
+            --bg-color: #ffffff; --text-color: #333333; --header-bg: #f8f9fa; --header-text: #212529;
+            --sidebar-bg: #e9ecef; --sidebar-text: #343a40; --sidebar-link-hover-bg: #dee2e6;
+            --sidebar-link-active-bg: #ced4da; --accent-color: #8a2be2; --heading-color: #4a148c;
+            --footer-bg: #f8f9fa; --footer-text: #6c757d; --button-text: var(--header-text);
+            --button-hover-bg: rgba(0, 0, 0, 0.05); --button-active-bg: rgba(0, 0, 0, 0.08);
+            --image-border: #dee2e6; --blockquote-border: #ced4da; --blockquote-text: #6c757d;
+            --prayer-bg: #f1f3f5; --prayer-border: var(--accent-color);
+        }
+        body.theme-dark-blue {
+            --bg-color: #0f172a; --text-color: #cbd5e1; --header-bg: #1e293b; --header-text: #f1f5f9;
+            --sidebar-bg: #1e293b; --sidebar-text: #cbd5e1; --sidebar-link-hover-bg: #334155;
+            --sidebar-link-active-bg: #475569; --accent-color: #60a5fa; --heading-color: var(--accent-color);
+            --footer-bg: #1e293b; --footer-text: #94a3b8; --button-text: var(--header-text);
+            --button-hover-bg: rgba(255, 255, 255, 0.1); --button-active-bg: rgba(255, 255, 255, 0.15);
+            --image-border: #334155; --blockquote-border: #475569; --blockquote-text: #94a3b8;
+            --prayer-bg: #0f172a; --prayer-border: var(--accent-color);
+        }
+         body.theme-sky-blue {
+            --bg-color: #f0f9ff; --text-color: #0c4a6e; --header-bg: #e0f2fe; --header-text: #0369a1;
+            --sidebar-bg: #e0f2fe; --sidebar-text: #0c4a6e; --sidebar-link-hover-bg: #bae6fd;
+            --sidebar-link-active-bg: #7dd3fc; --accent-color: #0ea5e9; --heading-color: #0369a1;
+            --footer-bg: #e0f2fe; --footer-text: #38bdf8; --button-text: var(--header-text);
+            --button-hover-bg: rgba(0, 0, 0, 0.05); --button-active-bg: rgba(0, 0, 0, 0.08);
+            --image-border: #bae6fd; --blockquote-border: #7dd3fc; --blockquote-text: #38bdf8;
+            --prayer-bg: #f0f9ff; --prayer-border: var(--accent-color);
+        }
+        #app-header {
+            background-color: var(--header-bg); color: var(--header-text); padding: 0.5rem 1rem; display: flex;
+            justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid var(--image-border); min-height: 55px;
+        }
+        #app-header h1 {
+            font-family: 'Merriweather', serif; font-size: 1.3rem; font-weight: 700; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); margin-left: 0.5rem;
+        }
+        body:not(.theme-light):not(.theme-sky-blue) #app-header h1 { text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); }
+        .header-controls { display: flex; align-items: center; gap: 0.2rem; }
+        .control-button {
+            background-color: var(--button-bg); color: var(--button-text); border: none; padding: 0.5rem;
+            border-radius: 50%; cursor: pointer; display: inline-flex; justify-content: center;
+            align-items: center; width: 40px; height: 40px; transition: background-color 0.2s ease; line-height: 1;
+        }
+        .control-button svg { width: 20px; height: 20px; fill: currentColor; }
+        .control-button:hover { background-color: var(--button-hover-bg); }
+        .control-button:active { background-color: var(--button-active-bg); }
+        #theme-toggle-button {
+             min-width: 80px; width: auto; border-radius: 20px; padding: 0.5rem 0.8rem; font-size: 0.8rem;
+             font-weight: bold; text-transform: capitalize;
+        }
+        .main-container { display: flex; flex-grow: 1; }
+        #sidebar {
+            width: 260px; background-color: var(--sidebar-bg); color: var(--sidebar-text); padding: 1rem;
+            overflow-y: auto; transition: transform 0.3s ease-in-out, width 0.3s ease-in-out; flex-shrink: 0;
+            height: calc(100vh - 55px); position: sticky; top: 55px; border-right: 1px solid var(--image-border);
+        }
+        #sidebar.hidden { transform: translateX(-100%); width: 0; padding: 0; border-right: none; overflow: hidden; }
+        #sidebar ul { list-style: none; }
+        #sidebar li { margin-bottom: 0.3rem; }
+        #sidebar a {
+            color: var(--sidebar-text); text-decoration: none; display: block; padding: 0.4rem 0.8rem;
+            border-radius: 6px; transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+            font-size: 0.95rem;
+        }
+        #sidebar a:hover { background-color: var(--sidebar-link-hover-bg); transform: translateX(3px); }
+        #sidebar a.active { background-color: var(--sidebar-link-active-bg); color: var(--header-text); font-weight: bold; }
+        #content { flex-grow: 1; padding: 1.5rem 2rem; overflow-y: auto; max-width: 850px; margin: 0 auto; }
+        #content h2 {
+            font-family: 'Merriweather', serif; font-size: 2rem; margin-top: 2.5rem; margin-bottom: 1.2rem;
+            color: var(--heading-color); border-bottom: 3px solid var(--accent-color); padding-bottom: 0.5rem; font-weight: 700;
+        }
+         #content h3 {
+            font-family: 'Merriweather', serif; font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem;
+            color: var(--heading-color); font-weight: 700;
+         }
+        #content p, #content li { margin-bottom: 1rem; font-size: 1rem; }
+        #content li { margin-bottom: 0.5rem; }
+        #content blockquote {
+            border-left: 5px solid var(--blockquote-border); padding: 0.8rem 1.2rem; font-style: italic;
+            color: var(--blockquote-text); background-color: rgba(128, 128, 128, 0.05); border-radius: 4px; margin: 1.5rem 0;
+        }
+        #content ul, #content ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+        #miracle-clock-image {
+            max-width: 100%; height: auto; display: block; margin: 1.5rem auto; border: 1px solid var(--image-border);
+            border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        body:not(.theme-light):not(.theme-sky-blue) #miracle-clock-image { box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        #author-photo {
+             float: right; width: 150px; height: auto; margin: 0 0 1rem 1.5rem; border-radius: 8px;
+             border: 2px solid var(--image-border); box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        body:not(.theme-light):not(.theme-sky-blue) #author-photo { box-shadow: 0 2px 5px rgba(0,0,0,0.4); }
+        .prayer {
+            font-style: italic; margin: 2rem 0; padding: 1.5rem; background-color: var(--prayer-bg);
+            border-left: 6px solid var(--prayer-border); border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        body:not(.theme-light):not(.theme-sky-blue) .prayer { box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .litany-item { margin-bottom: 0.6rem; }
+        #app-footer {
+            background-color: var(--footer-bg); color: var(--footer-text); text-align: center; padding: 1rem;
+            font-size: 0.85rem; margin-top: auto; border-top: 1px solid var(--image-border);
+        }
+        @media (max-width: 768px) {
+             html { font-size: 15px; }
+            #app-header { min-height: 50px; padding: 0.3rem 0.8rem; }
+            #app-header h1 { font-size: 1.1rem; margin-left: 0.3rem; }
+            .control-button { width: 36px; height: 36px; padding: 0.4rem; }
+            .control-button svg { width: 18px; height: 18px; }
+            #theme-toggle-button { font-size: 0.75rem; padding: 0.4rem 0.7rem; min-width: 70px; }
+            #sidebar {
+                position: fixed; top: 0; left: 0; height: 100vh; z-index: 110; transform: translateX(-100%);
+                box-shadow: 3px 0 10px rgba(0,0,0,0.2); width: 280px; padding-top: 4rem; border-right: none;
+            }
+            #sidebar.visible { transform: translateX(0); }
+            body.sidebar-open::after {
+                content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.6); z-index: 105; transition: opacity 0.3s ease-in-out;
+            }
+            body:not(.sidebar-open)::after { opacity: 0; pointer-events: none; }
+            #content { padding: 1rem 1.2rem; }
+            #content h2 { font-size: 1.8rem; margin-top: 2rem; }
+            #content h3 { font-size: 1.4rem; margin-top: 1.5rem; }
+            #author-photo { float: none; display: block; margin: 1rem auto; width: 120px; }
+        }
+    </style>
+</head>
+<body class="theme-dark"> <!-- Default theme class set to dark -->
+
+    <header id="app-header">
+        <button id="hamburger-button" class="control-button" aria-label="Toggle Menu">
+             <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg>
+        </button>
+        <h1>Miracle Hour</h1>
+        <div class="header-controls">
+             <button id="theme-toggle-button" class="control-button">Theme</button>
+             <button id="font-decrease" class="control-button" aria-label="Decrease Font Size">
+                 <svg viewBox="0 0 24 24"><path d="M6.5 11.5H17.5V12.5H6.5V11.5Z M 9.5 7.5 C 8.71 7.5 8.03 7.78 7.5 8.28 L 6.06 6.84 C 6.91 5.99 8.11 5.5 9.5 5.5 C 11.33 5.5 12.88 6.17 14 7.35 C 15.12 8.53 15.75 10.04 15.75 11.75 V 12.25 H 12.75 V 11.75 C 12.75 10.72 12.44 9.94 11.81 9.35 C 11.18 8.76 10.41 8.5 9.5 8.5 C 8.83 8.5 8.29 8.65 7.88 8.94 C 7.47 9.23 7.19 9.62 7.03 10.06 H 11.97 V 7.5 H 9.5 Z M 17 14.5 H 7 V 15.5 H 17 V 14.5 Z"></path></svg>
+             </button>
+            <button id="font-increase" class="control-button" aria-label="Increase Font Size">
+                 <svg viewBox="0 0 24 24"><path d="M 8 7 V 5.5 H 16 V 7 H 12.5 V 18 H 11 V 7 H 8 Z M 17.5 14.5 V 13 H 19 V 11.5 H 17.5 V 10 H 16 V 11.5 H 14.5 V 13 H 16 V 14.5 H 17.5 Z"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <nav id="sidebar">
+            <ul>
+                <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#miracle-segments">Miracle Segments</a></li>
+                <li><a href="#section-1-praise">1. Praise</a></li>
+                <li><a href="#section-2-sing">2. Sing to the Lord</a></li>
+                <li><a href="#section-3-warfare">3. Spiritual Warfare</a></li>
+                <li><a href="#section-4-surrender">4. Surrender</a></li>
+                <li><a href="#section-5-release-holy-spirit">5. Release Holy Spirit</a></li>
+                <li><a href="#section-6-repentance">6. Repentance</a></li>
+                <li><a href="#section-7-forgiveness">7. Forgiveness</a></li>
+                <li><a href="#section-8-scripture">8. Scripture Reflections</a></li>
+                <li><a href="#section-9-listen">9. Wait & Listen</a></li>
+                <li><a href="#section-10-intercessions">10. Intercessions</a></li>
+                <li><a href="#section-11-petitions">11. Petitions</a></li>
+                <li><a href="#section-12-thanksgiving">12. Thanksgiving</a></li>
+                <li><a href="#foreword">Foreword</a></li>
+                <li><a href="#about-author">About the Author</a></li>
+            </ul>
+        </nav>
+
+        <main id="content">
+            <!-- ================== INTRODUCTION ================== -->
+            <section id="introduction">
+                <h2>Introduction: Miracle Hour</h2>
+                 <blockquote> "... Could you not keep watch for one hour?" (Mark 14:37). </blockquote>
+                 <p>Do you have trouble with commitment to prayer? Sometimes I go for long periods of time with a rich, full prayer life, then it slips away and for months I struggle to regain that intimacy and depth with the Lord. This booklet emerged at the end of a long dry time, when I was so ashamed of my prayerfessness that I cried out to the Lord for help. I woke up one morning and yelled at the Lord, "I HAVE TO have a quality hour with You! I can only do it with Your grace. Please, please help me!"</p>
+                 <p>He not only gave me a rich, grace-filled hour, but also showed me a simple format for a daily hour that would draw me into deeper intimacy with Him and empower me in my Christian walk. Remember the old saying, "Inch by inch it's a cinch"? How about five minutes by five minutes it's a cinch? I have divided the hour into 12 five-minute segments, as shown in the "clock" on the next page.</p>
+                 <blockquote> "Morning by morning, O Lord, you hear my voice; morning by morning I lay my requests before you and wait in expectation" (Psalm 5:3). </blockquote>
+                 <p>Between the five-minute segments you might want to pray the "Our Father," or another brief prayer of your choice. For Catholics or others with a relationship with the mother of Jesus, I would invite the inclusion of a "Hail Mary" as a transition between the sections. For those who pray in the charismatic gift of tongues, I would encourage that form of prayer at various times throughout the hour.</p>
+                 <p>It's wonderful to start the day with the Lord, praying in the early hours before work begins. Having a set time and place for prayer has positive benefits, whether it is morning, noon or night. Ideally, prayer should overflow from that formal time into spontaneous encounters with God all day long. It is marvelous when we can come into a freedom where the Lord is so real that we have "prayer conversations" with Him in the context of all our activities.</p>
+                 <p>The prayers and reflections in this booklet are offered as suggestions to help you get started. The more you can personalize them, and allow the Holy Spirit to lead you spontaneously in your own words, the more meaningful it will be. You can expect a tremendous awakening and continual deepening of your spiritual life through this daily "Miracle Hour." A friend, Ginny, who reviewed an early draft of this booklet, commented: "This is going to take people through a process of breaking down barriers and loosening things up in many areas of their lives." When I showed it to another friend, Nancy, she said, "We've been praying for someone to do this!" The scriptures for additional study at the end of each section were her idea.</p>
+                 <p>I encourage you to come to prayer with an attitude of openness and expectancy. Come remembering all the ways God has helped you in the past, and come expecting Him to help you even more in the future. Consider the "Miracle Hour" as an intensely loving "power encounter" with your heavenly Father. It's a time of cleansing, deeper consecration and growth in understanding of the ways of God. Come accepting and expecting His love. Come prepared to experience His goodness and mercy. Come with a yielded heart that says simply, "Lord, change me." Come to be transformed, loosened up, healed and empowered.</p>
+                 <p>There is such a desperate need for people of prayer in this world of atheism and anti-Christian practices. I believe God is calling His people to prayer more intensely than ever before. If we could only comprehend the immensity of God's plan for our lives, and the importance of our prayers, we would stop in our tracks and reevaluate our priorities immediately. Life is just too short and too precious to waste on empty things. As I write this I am thinking of my beloved brother-in-law, Harvell Smith (to whom I dedicate this booklet), who was killed in an airplane crash in the Caribbean. He had perhaps a minute or two to get his life right with God. None of us know how many days, weeks or months we have left in this precious life. In 1984 I had a mastectomy for breast cancer, and had to face the possibility of death. It turned my life around and I made a decision not to waste another moment on empty things. Will you join me today, and make a new commitment to be a person of prayer? God will bless you for it. Get a Bible, a note pad and a pen, and find a quiet place. Join me now, in an "hour of power" that will change your life.</p>
+                 <div class="prayer"> "Loving heavenly Father we ask for a spirit of prayer to come upon us now. Increase our longing for You, and our longing for the salvation of people around the world. I pray with the psalmist, As the deer pants for streams of water, so my soul pants for You, O God. My soul thirsts for God, for the living God. When can I go and meet with God?' (Psalm 42:1-2) Come Holy Spirit, I want to meet with God. Please teach me how to pray. In Jesus' name. Amen." </div>
+                 <p><small>(Scriptures for study: Mk 1:35,1 Ti 6:19, Ps 119:147, Lk 2:37, Ps 55:17, Eph 3:14-21, Eph 1:15-23, Ps 57:8, Jos 5:14-15, Ps 95:6, Ps 96:9, Jn 4:14. Is 2:3, Ps 27:4, Ps 122:1, Ps 123:1,1 Ti 2:8, Lk 11:1, Ps 34:15, Is 65:24. Ps 94:9, Ja 5:4, 1 Pe 3:12)</small></p>
+            </section>
+
+            <!-- ================== SEGMENTS OVERVIEW ================== -->
+            <section id="miracle-segments">
+                 <h2>Miracle Segments Overview</h2>
+                 <img src="miracle_hour_clock.png" alt="Miracle Hour Clock Diagram" id="miracle-clock-image" />
+                 <p>The hour is divided into 12 five-minute segments:</p>
+                 <ol>
+                     <li>Praise</li> <li>Sing to the Lord</li> <li>Spiritual Warfare</li> <li>Surrender</li>
+                     <li>Release of the Holy Spirit</li> <li>Repentance</li> <li>Forgiveness</li>
+                     <li>Scripture Reflections</li> <li>Wait for the Lord to Speak</li> <li>Intercessions</li>
+                     <li>Petitions</li> <li>Thanksgiving</li>
+                 </ol>
+                 <p>(Each section is approximately 5 minutes.)</p>
+             </section>
+
+            <!-- ================== SECTION 1: PRAISE ================== -->
+            <section id="section-1-praise">
+                 <h2>1. Praise (5 mins)</h2>
+                 <blockquote>"Praise the Lord, O my soul; all my inmost being, praise His holy name" (Psalm 103:1).</blockquote>
+                 <p>Throughout scripture, God is very insistent about praise. I suspect we have much to learn about the amazing, mysterious power of this humble activity. When we praise we seem to be acknowledging His supremacy and authority in our lives. Through praise we are stating that we are weak and He is strong. Praise makes room in our hearts for God's will to be done, and recognizes the absurdity of any attempt to manipulate God in prayer. He is sovereign. This awesome Creator, who loves us so much that He sent Jesus to die for us that we might have a place in His family, deserves our adoration and praise. His love for us is outrageous, beyond comprehension.</p>
+                 <p>There is something special about people who praise. They have a bright light in their eyes that reflects something beyond themselves. People of praise are people of faith. Their very lives state to the world that they trust their loving heavenly Father, know He intends goodness for His children, and expect extravagant answers to prayer.</p>
+                 <p>The very "sacrifice" of praise—working at it when we don't feel like it—draws us into the presence of the Lord. People of praise discover that this action of the heart, the mind (and sometimes just the will) is very healthy for body, mind and spirit. Praise draws us into a healthy mental attitude. Praise increases our capacity to live and grow in love and holiness. Praise draws us into the abundant life in which God created us to live. Let us praise God in all things!</p>
+                 <p>Read aloud the following litany of praise and allow it to open your spirit and draw you into the realm of the miraculous. For the next five minutes just forget about yourself and concentrate on God. He is awesome!</p>
+                 <h3>Litany of Praise*</h3>
+                 <p><small>[Optional response before each: I praise You, Lord Jesus!]</small></p>
+                 <div class="litany-item">I praise You, Lord Jesus, You are my Life, my Love.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Name above all names.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are Emmanuel, God with us.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the King of kings.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the King of creation.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are King of the universe.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Lord of lords.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Almighty.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Christ.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are Christ, the King.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Lamb of God.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Lion of Judah.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Bright Morning Star.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Champion and Shield.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Strength and our Song.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Way for our life.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the only Truth.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Real Life.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Wonderful Counselor.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Prince of Peace.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Light of the World.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Living Word.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Redeemer.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Messiah.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Anointed One.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Holy One of Israel.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Good Shepherd.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Sheepgate.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Lord of hosts.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Rock of all ages.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are my Hiding Place.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Savior of the World.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Strong Tower.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Mountain Refuge.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Bread of Life.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Font of all holiness.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Living Water.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the True Vine.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are my Spouse, my Maker.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Fortress.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Deliverer.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Victory.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Salvation.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Righteousness.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Wisdom.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Sanctification.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Justification.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Door.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the great I AM.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the great High Priest.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are you are the Cornerstone.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Sure Foundation.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Joy.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Portion and Cup.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are my Healing and Wholeness.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are our Covenant.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Promise of the Father.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Everlasting One.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Most High God.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Lamb that was slain.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Just Judge.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Balm of Gilead.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Mighty Warrior.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are you are my Defense.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Bridegroom.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are my Patience.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Solid Reality.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are my Provider.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Resurrection and the Life.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Alpha and the Omega.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are the Beginning and the End.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are Source, Guide and Goal of all that is.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are all that I need.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are all that I want.</div>
+                 <div class="litany-item">I praise You, Lord Jesus, You are worthy of all praise!</div>
+                 <p><small>*Used with the permission of the Oakland Catholic Charismatic Renewal. Diocese of Oakland. CA.</small></p>
+                 <p><small>(Scriptures for study: Ps 34:1, Mt 21:16, Jas 5:13. Ps 150:2, Ps 92:1-3, 2 Ch 20:22, Ps 35:28. Ps 51:15, 1 Pe 2:9, Mt 18:3, Ps 107:22, Heb 13:15, Ps 116:17, Rev 5:11-14, Rev 7:11-12, Rev 19:5)</small></p>
+                 <p>(Our Father, etc.)</p>
+            </section>
+
+            <!-- ================== SECTION 2: SING ================== -->
+             <section id="section-2-sing">
+                 <h2>2. Sing to the Lord (5 mins)</h2>
+                 <blockquote>"Come, let us sing for joy to the Lord; let us shout aloud to the Rock of our salvation. Let us come before Him with thanksgiving and extol Him with music and song" (Psalm 95:1-2).</blockquote>
+                 <p>It has been said that "He who sings, prays twice." Anointed music has a great power to open our spirits. Close your eyes, be still and allow music to rise up in your spirit. Hum, sing in tongues if you are released in that gift, or sing Christ-centered songs such as, "I Love You, Lord," "Turn Your Eyes Upon Jesus," the eight-fold "Alleluia," etc., as the Holy Spirit leads you.</p>
+                 <p><small>(Scriptures for study: Ps 89:1, Ps 149:1, 1 Co 14:15, Eph 5:19, Col 3:16, Ps 63:5-7, Ps 90:14, Ps 40:3, 1 Ch 6:32, Ps 57:7, Ps 126:5, Is 12:6, Ps 100:2)</small></p>
+                 <p>(Our Father, etc.)</p>
+            </section>
+
+            <!-- ================== SECTION 3: WARFARE ================== -->
+            <section id="section-3-warfare">
+                 <h2>3. Spiritual Warfare (5 mins)</h2>
+                  <blockquote>"Be strong in the Lord and in His mighty power. Put on the full armor of God so that you can take your stand against the devil's schemes..." (Ephesians 6:11-12).</blockquote>
+                 <p>The Bible reminds us that there are negative spiritual forces that can exert a controlling influence in our lives and diminish our capacity to be free, open and loving people. The Bible also reminds us that we have been given authority to come against the power of the enemy (Mark 16:17). Let's ask the Holy Spirit to make us wise and courageous in the use of that power.</p>
+                 <p>At times in your life you may have inadvertently opened your spirit to some of those influences. It's time to close those doors. It is important when we pray to place ourselves specifically under the Lord's protection and take authority over any powers of evil. (This has already begun, because praise is one of the most powerful weapons against the enemy.)</p>
+                 <div class="prayer">
+                 <h3>Spiritual Warfare Prayer</h3>
+                 <p>Heavenly Father, I come before You in praise, worship and adoration. Thank You for sending Your Son Jesus to give me life, to give me forgiveness, to give me a place in Your family. Thank You for sending the Holy Spirit to guide me and empower me in my daily life. Heavenly Father, open my eyes that I may see Your greatness, Your majesty, Your victory on my behalf.</p>
+                 <p>I place myself now under the cross of Jesus Christ and cover myself with the Precious Blood of Jesus. I surround myself with the light of Christ and say in the name of Jesus that nothing shall interfere with the Lord's work being accomplished in my life.</p>
+                 <p>I put on God's armor to resist the devil's tactics. I stand my ground with truth buckled around my waist and integrity for a breastplate. I carry the shield of faith to put out the burning arrows of the evil one. I accept salvation from God to be my helmet and receive the word of God from the Spirit to use as a sword (Ephesians 6:10,11,14,16,17).</p>
+                 <p>Heavenly Father please show me any way that satan has a hold of my life. I let go of all those ways now. Any territory I have handed over to satan I now reclaim and place under the Lordship of Jesus Christ.</p>
+                 <p>In the name of Jesus Christ I bind all spirits of the air, water, ground, underground and nether world. I bind all forces of evil and claim the Blood of Jesus on the air, the atmosphere, the water, the ground and their fruits around us, the underground and the nether world. In the name of Jesus Christ I seal this room and all members of my family, relatives, associates and all sources of supply in the Blood of Jesus Christ. In the name of Jesus Christ I forbid every spirit from any source from harming me in any way.</p>
+                 <p>In the name of Jesus Christ I reject the seductive lure of evil in all its forms and refuse to let sin have dominion over me. I reject satan and all his works and all his empty promises. Heavenly Father, I ask forgiveness for myself, my friends, relatives and ancestors for calling upon powers that set themselves up in opposition to Jesus Christ. I renounce all openness to the occult, all false worship and all benefits from magical arts. I renounce every power apart from God and every form of worship that does not offer true honor to Jesus Christ. I specifically renounce [______] (For example, astrology, fortune telling, crystals, tarot cards, ouija boards or any occult games, etc.) In the name of Jesus, I break any curses that may be coming against me or my family, and stop the transmission of those curses through my ancestry.</p>
+                 <p>In the name of Jesus Christ, I bind you spirit of [______] (Ask the Lord to reveal the name. If you aren't sure about the name, identify it by its negative fruit: anger, unforgiveness, fear, insecurity, illness, trauma, etc.) I bind you away from me now, in Jesus' name. Lord Jesus, fill me with Your love to replace the fear; fill me with strength to replace the weakness, etc. (After each command, ask the Lord to fill you with the "positive opposite" of the negativity you removed: fear/love, illness/health, weakness/strength, etc.)</p>
+                 <p>Loving Father, let the cleansing, healing waters of my baptism flow back through the generations to purify my family line of contamination. Thank You, Lord, for setting me free, "...in all these things we are more than conquerors through Him who loved us" (Romans 8:37).</p>
+                 <p>(Spend a few moments in praise.)</p>
+                 </div>
+                 <p><small>(Scriptures for study: Ro 13:12, 2 Cor 6:7, 1 Th 5:8, 1 Jn 4:1-6, 1 Th 5:21, 2 Co 4:4, Eph 2:2, Ac 26:18, 2 Th 2:9, Lk 9:42, 1 Pe 5:8-9, Eph 4:27, Ps 44:5, Lk 10:19, Ro 8:37, 1 Jn 5:5)</small></p>
+                  <p>(Our Father, etc.)</p>
+           </section>
+
+            <!-- ================== SECTION 4: SURRENDER ================== -->
+            <section id="section-4-surrender">
+                <h2>4. Surrender (5 mins)</h2>
+                <blockquote>"...who is willing to consecrate himself today to the Lord?" (1 Chronicles 29:5).</blockquote>
+                 <p>Our healing and empowerment begins when we surrender to Jesus. People generally find that He is the strongest in them when they surrender, and are in a position of weakness before Him. There is nothing more important in your spiritual life than to say "Yes" to Jesus with all your heart and soul, and then to allow the Holy Spirit to work out the meaning of that "Yes" in your life. You can be 100% sure of this: God loves you (1 John 4:16) and will always be with you; and all His purposes for your life are good. The more we open up, yield, and simply allow ourselves to be drawn deeply into the Lord's love, the more our lives will come into right order. Will you say "Yes" to Jesus? You may have said "Yes" many times in your life, and yet today He may be calling you to go much deeper.</p>
+                <p>Once, after I had prayed the following prayer many times, the Lord asked, "Do you really mean it, Linda?" Shaken, I responded, "Yes, Lord," and He took me even deeper. Pray it now, from your heart. Pray it in your words, spontaneously, not as a ritual, but with an opening of yourself to God.</p>
+                 <div class="prayer">
+                     <h3>A Prayer of Surrender</h3>
+                      <blockquote>"...may Your will be done" (Matthew 26:42).</blockquote>
+                      <p>Loving Father, I surrender to You today with all my heart and soul. Please come into my heart in a deeper way. I say "Yes," to You today. I open all the secret places of my heart to You and say, "Come on in." Jesus You are Lord of my whole life. I believe in You and receive You as my Lord and Savior. I hold nothing back. Holy Spirit, bring me to deeper conversion to the person of Jesus Christ. I surrender all to You: my health, my family, my resources, occupation, skills, relationships, time management, successes and failures. I release it, and let it go. I surrender my understanding of how things ought to be, my choices and my will. I surrender to You the promises I have kept and the promises I have failed to keep. I surrender my weaknesses and strengths to You. I surrender my emotions, my fears, my insecurities, my sexuality. I especially surrender [______] (Continue to surrender other areas as the Holy Spirit reveals them to you.) Lord, I surrender my entire life to You, the past, the present and the future. In sickness and in health, in life and in death, I belong to You.</p>
+                     <p>(If you know a song of surrender, you might close your eyes and sing it now. You could even make up a song spontaneously and sing it to Him.)</p>
+                     <blockquote>"Take, Lord, and receive, all my liberty, my memory, my understanding, and my entire will, all that I have and possess. You have given all to me. To You, O Lord, I return it. All is Yours. Dispose of it wholly according to Your will. Give me Your love and Your grace, for this is sufficient for me." (Prayer of St. Ignatius)</blockquote>
+                 </div>
+                 <p><small>(Scriptures for study: Php 3:8, Pr 23:26, Ro 12:1, Mt 16:24, Lk 14:33, Ps 143:10, Ps 40:8, Dt 6:5, Pr 3:5, Jer 29:13, Jn 3:16, 1 Pe 1:18-19, Tit 3:5, Ro 10:9,13, Ro 1:6, Ro 14:8, Ac 16:30, 1 Jn 5:1,5)</small></p>
+                 <p>(Our Father, etc.)</p>
+            </section>
+
+            <!-- ================== SECTION 5: RELEASE HOLY SPIRIT ================== -->
+             <section id="section-5-release-holy-spirit">
+                 <h2>5. Release of the Holy Spirit (5 mins)</h2>
+                 <p>Spirit of God, come now. Work in me, releasing the hurts and pains held within. Spirit of Love, flow through me, melting away hardness of heart and breaking down the walls I have built. Spirit of Truth, reveal the hidden areas that need Your healing touch. </p>
+                 <p>Holy Spirit, I invite you into my emotional life. Thank You for drawing out the uncried tears, the unfinished grieving, the pain of loss, the traumas, the fear, the emotional hurts so painful that they were "buried alive." Spirit of Wisdom thank You for coming into the root cause of any chronic failures. Gentle Holy Spirit, thank You for walking through my early years and facing the past with me. Thank You for reminding me that the love of Jesus was always there, filling in the gap between the love I needed and the love I received. </p>
+                 <p>(Thank the Holy Spirit for scanning your life and bringing to mind any hurtful memories that need to be healed. When they surface, say simply, "Holy Spirit I surrender that event to You for healing. Thank You for bringing Your good out of the hurt (Romans 8:28). Praise You, Jesus.") Let this be an opportunity for a deeper release of the Holy Spirit as more of your emotional life becomes unbound.</p>
+                 <p>Thank You, Holy Spirit, for Your presence with me, flowing freely in me and through me. Thank You for being my friend, my teacher, my comforter, my counselor, my intercessor, and the giver of extravagant gifts. Thank You especially for [______] (Continue thanking Him spontaneously.)</p>
+                 <p>Close your eyes and sing, "Come, Holy Ghost," or "Spirit of the Living God," or another song that invites the Holy Spirit to come. Amen.</p>
+                 <p><small>(Scriptures for study: Ro 5:5, Joel 2:28, Mt 3:11, Lk 11:13, Jn 14:26, Gal 4:6, 1 Cor 2:13, Jn 16:13, Ro 8:11, Zec 4:6, Ac 2:2, Ro 8:9, 1 Co 3:16, Is 55:1, Mt 25:35-36, Mt 10:8, 1 Pe 4:10)</small></p>
+                  <p>(Our Father, etc.)</p>
+             </section>
+
+            <!-- ================== SECTION 6: REPENTANCE ================== -->
+            <section id="section-6-repentance">
+                 <h2>6. Repentance (5 mins)</h2>
+                 <p>The more you are open to the Holy Spirit, the more aware you will be of those areas in your life where Jesus is not yet fully revealed in you. With that awareness should come a deep knowledge of the Lord's unconditional love. If you start feeling like a failure, remember the power of God's forgiving love, as expressed on the cross at Calvary. Then praise Him! Someone commented once that when we have sinned we can simply "Run to God, yell 'guilty!' and get on with things." This is a good reminder that we don't have to stay stuck and paralyzed with guilt. The Lord wants us to celebrate our movement toward Him. Sin has a power to hold us down and block the flow of God's love. We hide when we feel guilty. Repentance has a power to lift us up again and release the flow of God's love.</p>
+                 <blockquote> "But if we walk in the light, as he is in the light, we have fellowship with one another, and the blood of Jesus, his Son, purifies us from all sin" (1 John 1:7).</blockquote>
+                 <p>For Catholics (and those from other sacramental churches) the sacrament of reconciliation is one of the greatest gifts they can give themselves when they are faced with sin and guilt, especially when it is deep and heartfelt, and not ritualistic or superficial. Many are healed, emotionally and even physically, through this powerful instrument of grace. So this is a brief period of self-examination, of asking the Lord to reveal areas of unconfessed sin and then making some positive choices. The Lord may be calling you to speak with a pastor or with a wise, trusted friend. He may call you to make amends to a person you have harmed. Be obedient to what the Holy Spirit tells you to do. He won't ask you to do anything without giving you the strength to succeed.</p>
+                 <p>As you pray the following prayer I am not recommending that you delve into all your sins and failings, but let the Holy Spirit guide you. Don't get bogged down in the details of the prayer, but use it to stimulate an active conscience.</p>
+                  <div class="prayer">
+                      <h3>Prayer of Repentance</h3>
+                      <blockquote>"...return to me with all your heart..." (Joel 2:12).</blockquote>
+                      <p>Loving Father, I am sorry for all the ways I have offended You, knowingly or unknowingly. I have sinned in thought, word and deed. I have sinned in what I have done, and in what I have failed to do. I come before You and ask for the grace of a deeply repentant heart. You know my innermost secrets. I open my heart to You today and ask You to show me the ways I have blocked the flow of Your love. Forgive me, Father, for all my sins, faults and failings. For all the times I have gone astray and not chosen life, I am deeply sorry. I repent of lack of faith, acting in fear instead of faith, unbelief in Your goodness, or lack of truly believing in Your love for me.</p>
+                      <p>I ask forgiveness for sins against purity: lust, fornication, adultery, unclean books, movies and videos and sexual fantasies, especially [______]. I turn away from all those activities and I turn to You. I deeply repent of having an abortion or encouraging someone to have an abortion. Forgive me, Lord.</p>
+                      <p>I repent of any compulsive, addictive behavior: drinking, drugs, gambling, sex, food and all addictions, especially [______]. Thank You, Father, for setting me free. I repent of not taking care of my physical and emotional health: lack of balance in nutrition, rest and exercise; perhaps the unhealthy suppression of emotions. I make a commitment today to take care of myself.</p>
+                      <p>I'm sorry for the times I have hurt other people. I repent of any stealing, lying, deceiving and defrauding. I regret any lack of affirming others, brushing people off, coldness, unloving and inconsiderate behavior. I'm sorry for gossiping, betrayal of confidences and all breaches of faith. I repent of any envy, hatred, resentment, unforgiveness, jealousy, criticizing or judging others, not receiving love in the way it is offered, and withholding expressions of love. I especially ask forgiveness for [______].</p>
+                      <p>I bring before You now those areas that I am the most ashamed to bring to You; areas that I have hidden, such as certain personal habits, secret guilt, dark areas I have previously refused to bring to You. I bring You all areas about which I am the most ashamed, especially [______]. Lord, I will no longer hide them from You, or from myself. Today is my day of healing and liberation.</p>
+                      <p>Loving Father, what else should I bring to You? (Be still and listen.) For these offenses I beg pardon today. I accept Your forgiveness and now share Your forgiveness with others. Thank You, Lord. Amen.</p>
+                  </div>
+                  <p><small>(Scriptures for study: Ps 51:10, Ac 3:19, Pr 28:13, 1 Jn 1:9, 2 Ch 7:14, Is 55:7, Ac 2:38, Ps 51:17, Joel 2:13, Eph 5:11, 2 Cor 7:10, Ps 103:3, Ac 13:38, Eph 1:7, Heb 9:14, Ro 12:2, Mic 7:18, Lam 3:22, Rev 22:14, Is 43:25, Ro 8:1,34, 1 Co 14:25, 1 Pe 1:16, 1 Th 4:3, Heb 10:10, Eph 5:11)</small></p>
+                  <p>(Our Father, etc.)</p>
+             </section>
+
+            <!-- ================== SECTION 7: FORGIVENESS ================== -->
+            <section id="section-7-forgiveness">
+                 <h2>7. Forgiveness (5 mins)</h2>
+                 <blockquote>"And when you stand praying, if you hold anything against anyone, forgive him, so that your Father in heaven may forgive you your sins" (Mark 11:25).</blockquote>
+                 <p>When Jesus is at the center of our lives we can expect His reconciliation within ourselves, and with others. The Holy Spirit will not let us off the hook in our broken relationships, nor will He expect us to forgive in our own power. He will do it through us, as we let Him.</p>
+                 <p>Make a decision to be reconciled with the people in your life. Resolve to set them free, and set yourself free. Life is too short and too precious to waste being trapped and bound in the chains of unforgiveness. Let it go, today. You won't be sorry. Forgiveness begins with a decision; the emotions will follow.</p>
+                 <p>A prayer covering some basic areas of life is included to help bring to mind buried anger, bitterness and resentment that need to be released through forgiveness. (As you slowly and reflectively pray the following prayer, pause quietly in each category and allow the Holy Spirit to bring specific people or situations to mind.)</p>
+                  <div class="prayer">
+                     <h3>Forgiveness Prayer</h3>
+                      <blockquote>"In Him we have redemption through His blood, the forgiveness of sins, in accordance with the riches of God's grace that He lavished on us with all wisdom and understanding" (Ephesians 1:7-8).</blockquote>
+                      <p>Loving Father, I choose to forgive everyone in my life, including myself, because You have forgiven me. Thank You, Lord, for this grace.</p>
+                      <p>I forgive myself for all my sins, faults and failings, especially [______]. I forgive myself for not being perfect, I accept myself and make a decision to stop picking on myself and being my own worst enemy. I release the things held against myself, free myself from bondage and make peace with myself today, by the power of the Holy Spirit.</p>
+                      <p>I forgive my MOTHER for any negativity and unlove she may have extended to me throughout my life, knowingly or unknowingly, especially [______]. For any abuse of any sort I do forgive her today. For any way that she did not provide a deep, full, satisfying mother's blessing I do forgive her today. I release her from bondage and make peace with her today.</p>
+                      <p>I forgive my FATHER for any negativity and unlove he may have extended to me throughout my life, knowingly or unknowingly, especially [______]. For any and all abuses, unkind acts, hurts, and deprivations I do forgive him today. For any way that I did not receive a full, satisfying father's blessing I forgive him today. I release him from bondage and make peace with him today.</p>
+                      <p>I forgive my SPOUSE for any negativity and unlove extended throughout our time together, especially [______]. For all the wounds of our relationship I do forgive my spouse today. I release my spouse from bondage and make peace between us today.</p>
+                      <p>I forgive my CHILDREN for any hurts, especially [______]. I release them from bondage and make peace with them today. Bless them, Lord.</p>
+                      <p>I forgive my SISTERS and BROTHERS for any negativity and unlove, especially [______].</p>
+                      <p>I forgive my BLOOD RELATIVES for any abuses, especially [______].</p>
+                      <p>I forgive my ANCESTORS for any negative actions that affect my life today and make it harder for me today to live in the freedom of a child of God. I release them from bondage and make peace with them today, in Jesus' name.</p>
+                      <p>I forgive my FRIENDS for any actions of negativity and unlove, especially [______]. For any time they abused our relationship or led me astray, I do forgive them. I release them from all bondage and make peace with them today, in the power of the Holy Spirit.</p>
+                      <p>I forgive my EMPLOYERS of the present and the past for any negativity and unlove, especially [______]. I release them from all bondage and pray a blessing on them today, in Jesus' name.</p>
+                      <p>I forgive all SCHOOL TEACHERS for any negative, abusive actions, especially [______].</p>
+                      <p>I forgive LAWYERS, DOCTORS, NURSES, and other professionals, especially [______].</p>
+                      <p>I forgive CLERGY and all representatives of the church, especially [______]. I release them all, in Jesus' name.</p>
+                      <p>I forgive every member of SOCIETY who has hurt me in any way; those who have hurt me by criminal action or who have harmed my family. I forgive all in public life who have passed laws opposing Christian values. I forgive all the unfair, anonymous sources of pain and annoyance in my life.</p>
+                      <p>Heavenly Father I now ask for the grace to forgive the ONE PERSON IN LIFE WHO HAS HURT ME THE MOST. The one who is the hardest to forgive, I now choose to forgive, though I may still feel angry and hurt. I also make peace with the one family member, the one friend and the one authority figure who has hurt me the most.</p>
+                      <p>Lord, is there anyone else I need to forgive? (Be still and listen.) Thank You, loving Father, for setting me free.</p>
+                      <p>I now pray a blessing on those who have hurt me. Lord, do something special for each of them today. Thank You, Lord. I praise You. Amen.</p>
+                  </div>
+                 <p><small>(Scriptures for study: Lk 17:4, Eph 4:31-32, Col 3:13, Mt 6:14, Mt 5:44, Lk 6:35, Gal 5:14, 1 Th 3:12, 1 Pe 4:8, 1 Jn 4:12, Mt 26:28, 2 Ti 2:24, Tit 3:2, Jas 3:17, 1 Pe 1:22)</small></p>
+                  <p>(Our Father, etc.)</p>
+             </section>
+
+            <!-- ================== SECTION 8: SCRIPTURE ================== -->
+            <section id="section-8-scripture">
+                 <h2>8. Scripture Reflections (5 mins)</h2>
+                 <p>As I was browsing through scripture one morning the words, "Today I am freeing you from the chains on your wrists," leaped off the page from Jeremiah 40:4. I knew instantly that the Lord was saying He was releasing me to complete a difficult writing project about which I had been earnestly praying. I obviously took the phrase totally out of the original Biblical context, yet it was also obvious that the Lord was using that verse to speak to me. As the days passed I began to experience a new freedom in writing.</p>
+                 <p>Scripture is one of our most important avenues of interaction with the Lord, along with the direct inspiration of the Holy Spirit. As we feast on the Bible we come to know the character of God. We are infused with faith, hope and love as we spend time in the Word of God. Spending time in scripture under the guidance of the Holy Spirit opens the spiritual communication lines. Prayer time can be an adventure, especially if we get into the habit of easy, spontaneous dialogue with the Lord. I believe if you practice talking to Him conversationally during the day, this portion of your "Miracle Hour" will be even more fruitful.</p>
+                 <p>As you begin this section just say simply, "Lord, please speak to me through Your word today." Open your Bible, browse through it, allow a word or a phrase to catch your attention. Once something catches your eyes, stop there. If, for example, the word, "hope," catches your eye, ponder the meaning of it. Ask the Lord why that word captured your attention. Perhaps the phrase "integrity of heart" will suddenly speak to you. Ask, "Holy Spirit, what do You want to teach me through this word?" Write these reflections in your notebook and continue to meditate on them later. This is a very important record of your spiritual walk.</p>
+                 <p><small>(Scriptures for study: Ps 119:15, Ro 15:4, 2 Ti 3:16, Ro 10:8, Col 3:16, Ps 19:8, Ps 119:130, Ps 119:140, Job 23:12, Ps 119:103, Heb 4:12, Ps 119:9, Jer 23:29, Ro 1:16, Jn 20:31, Eph 6:17, Eph 5:26)</small></p>
+                  <p>(Our Father, etc.)</p>
+            </section>
+
+            <!-- ================== SECTION 9: LISTEN ================== -->
+            <section id="section-9-listen">
+                 <h2>9. Wait & Listen (5 mins)</h2>
+                  <blockquote>"Be still before the Lord and wait patiently for Him..." (Psalm 37:7).</blockquote>
+                 <p>Use this time simply to listen to the Lord. How is He encouraging you? Exhorting you? Directing you? Be still and listen. Pray, "Lord, teach me how to be a good listener." This is one of the most special times in the "Miracle Hour." The Lord tells us, "My sheep listen to my voice... " (John 10:27). As Christians who sincerely want to progress in our relationship with the Lord, we must find a quiet place, away from noisy distractions, and simply listen to the voice of our Lord. Often it helps to close your eyes. He wants to speak to us more than we want to listen. He is a God of love, and love longs to communicate. Have a pen and note pad handy, and expect Him to speak. The previous steps have built up to this wonderful moment. You have quieted your mind, your heart is open, your conscience is clear, and you are centered on the Lord. And, if you are like most of us, you need a word of encouragement from the Lord. Say, with Samuel, "Speak, for Your servant is listening "(1 Samuel 3:10). As words or thoughts begin to come into your mind, write them in your notebook. Most probably, it will be the Lord giving you a word of loving encouragement, hope and healing. You will grow in ability to hear Him speak throughout your daily affairs, as you spend quality time in prayer and scripture. Finally, it is also true that love does not require words. God may love you in the silence as well.</p>
+                 <p><small>(Scriptures for study: Dt 30:20, Lk 10:39 Rev 3:20, Ps 95:7, Is 30:21, Hab 2:2, Jn 16:13 Ac 10:19, Pr 8:34, Ps 25:9, Ps 73:24, Mt 13:23)</small></p>
+                 <p>(Our Father, etc.)</p>
+            </section>
+
+            <!-- ================== SECTION 10: INTERCESSIONS ================== -->
+            <section id="section-10-intercessions">
+                 <h2>10. Intercessions (5 mins)</h2>
+                 <blockquote>"I urge, then, first of all, that requests, prayers, intercession and thanksgiving be made for everyone..." (1 Timothy 2:1)</blockquote>
+                 <p>One of the greatest gifts we can give each other is the gift of prayer. This is the time to pray for other people. Pray for nations and leaders, pastors and those in authority. Pray for the homeless, aborted babies, the sick and the dying. Pray for those who have no one to pray for them. Pray for your enemies. Pray for your family, friends, and associates. Most importantly, ask the Holy Spirit to bring people to mind. He surely will. Their names probably will continue to come to mind throughout the day, once you make yourself available, because the Lord is always looking for someone willing to pray. As their names come to you, simply lift them to the Lord. Ask Him to help them, to bring them to wholeness, to forgive them, to touch them with His love, to release His power on their behalf. Pray with simple faith, as a little child turning to Daddy, knowing He longs to give you want you want. You might ask, "Lord, what does this person need?" Often an area of need will come to mind. When it does you can say simply, "Lord, Abba, please meet that need." Pray simply, from your heart. Pray, "Father, I pray Your heart's desire be done in their lives." He prompted you to ask, so you can be sure that He will do something about the need! Will you also pray for other people doing their "Miracle Hour," that their prayers will be answered too?</p>
+                  <blockquote>"The prayer of a righteous man [and woman] is powerful and effective "(James 5:16).</blockquote>
+                 <p><small>(Scriptures for study: Is 65:24, Ps 106:23, Eph 1:16, 1 Ch 21:17, Ps 91:15, Is 58:9, Dan 9:4-23, 1 Sa 1:27, 1 Ki 8, 1 Ki 18:37, 2 Ki 19:19, Is 59:16)</small></p>
+                 <p>(Our Father, etc.)</p>
+            </section>
+
+            <!-- ================== SECTION 11: PETITIONS ================== -->
+            <section id="section-11-petitions">
+                 <h2>11. Petitions (5 mins)</h2>
+                 <blockquote>"Let us then approach the throne of grace with confidence, so that we may receive mercy and find grace to help us in our time of need" (Hebrews 4:16).</blockquote>
+                 <p>This is a time for you to ask the Lord to meet your needs. Get in the habit of asking for everything throughout the day: parking places, green lights, favor with the boss, etc. This builds a comfortable, free interaction with the Lord that will make it easier to ask, expectantly, when there are serious needs. Do you have certain fears that need to be released? Do you have a weight problem? A health concern? Do you have difficulty with an annoying person? How about holding up to the Lord the long term goals for your life? Be specific. It helps to write down intercessions and petitions, as well as goals, so that when they are answered faith will increase.</p>
+                 <blockquote>"Ask and it will be given to you; seek and you will find; knock and the door will be opened to you. For everyone who asks receives; he who seeks finds; and to him who knocks, the door will be opened." (Matthew 7:7-8).</blockquote>
+                 <p><small>(Scriptures for study: Mt 21:22, Jn 15:7, Lk 11:9, Jn 14:13, 1 Jn 5:14-15, Ps 34:6, La 2:19, Ps 61:2, Ps 130:1-2, Ps 120:1, Ps 119:169, Ps 119:147, Ps 91:15, Mk 9:23, Ps 62:8)</small></p>
+                  <p>(Our Father, etc.)</p>
+            </section>
+
+            <!-- ================== SECTION 12: THANKSGIVING ================== -->
+            <section id="section-12-thanksgiving">
+                 <h2>12. Thanksgiving (5 mins)</h2>
+                 <blockquote>"...let us be thankful, and so worship God..." (Hebrews 12:28).</blockquote>
+                 <p>In the closing five minutes of your "Miracle Hour," turn to the Lord and worship Him through your gratitude. Use this prayer as a jumping off point and begin to thank Him spontaneously.</p>
+                 <div class="prayer">
+                     <h3>Prayer of Thanksgiving</h3>
+                     <blockquote>Give "...thanks to the Father, who has qualified you to share in the inheritance of the saints in the kingdom of light" (Colossians 1:12).</blockquote>
+                     <p>Thank you, loving Father in heaven, for the amazing grace of this "Miracle Hour" with You. Thank You for drawing me to prayer and giving me hunger and thirst for You. Thank You for the joy of surrender, repentance and forgiveness. Thank You for sending the Holy Spirit to teach, guide and counsel me. Thank You for a fresh infilling of the Holy Spirit today, and a release of the gifts of the Spirit. Thank You for sending me people for ministry. Thank You for the fruit of the Spirit working in me: love, joy, peace, patience, kindness, gentleness and self-control. Thank You for encouraging me to ask when I have a need, and helping me to understand the desires of my heart. Thank You for the wonderful gift of praise.</p>
+                     <p>Thank You for breaking the power of old habit patterns and bringing me to deeper conversion. Thank You for the grace to listen to You, believe in You and come to You. Thank You for all the ways You have helped me and intervened on my behalf. Thank You for Your plan for my life, for creating me with a high purpose in mind, for giving me a sense of worth. Thank You for loving me unconditionally and never leaving or forsaking me, no matter what I do. Thank You for being there at all the moments in my life, the rough and the smooth, and bringing me through those moments to a place of maturity and deeper faith.</p>
+                     <p>Thank You for Your living Word that strengthens and empowers me. Thank You for enabling me to rise out of discouragement and walk in joy. Thank You for lifting me up when I fall. Thank You for keeping me in perfect peace, as my mind is stayed on You. Thank You for making all things work together for good as I place my trust in You. Thank You for enabling me to dwell in safety, and protecting me from the snares of the fowler.</p>
+                     <p>Thank You for giving Your angels charge over me, to guide me in all my ways. Thank You for blessing me as I come in and go out. Thank You for guiding me and giving me wisdom. Thank You for Your goodness and mercy that follow me wherever I go. Thank You for the grace to lean on Your understanding, not my own. Thank You for enabling me to forsake all negative thoughts today, and only think those thoughts that are healing and uplifting. Thank You for giving me a tongue that speaks healing and life. Thank You for the abundance of your love that casts out all fear. Thank You for fighting for me against my enemies, and even making my enemies at peace with me. Thank You for the grace to choose life today. Thank You for enabling me to keep my heart fixed on You.</p>
+                     <p>Thank You for giving me a spirit of power, love, and a sound mind. Thank You for always causing me to triumph in Christ Jesus, and turning curses into blessings; In You I am more than a conqueror. Thank You for giving me the ability to think Your thoughts and walk steadfastly in Your ways. Thank You for opening the gates of heaven and pouring out blessings. Thank You for supplying all my needs in accordance with Your riches in glory. Thank You for giving me favor with You and with my fellow man. Thank You for freeing me from sickness in body, mind and spirit, and bringing good out of the times when trouble comes. Thank You for giving me a spirit of wisdom and revelation to know the great hope to which I have been called. Thank You for flooding my heart and mind with the light of heaven. Thank You for revealing the immeasurable and unlimited power of God available in me. Thank You for the grace to walk in forgiveness, faithfulness and love. Thank You for my exceedingly growing faith. Thank You for opening my hands to give to the needy, opening my eyes to see the needs of my brothers and sisters, opening my ears to their cry, opening my heart to love the wounded and lost, opening my lips to speak of Your love, and opening my arms to receive others in love. I especially thank You for [______].</p>
+                     <p>Thank You for all the blessings of life: godly ancestors, family, friends, teachers, professional people, clergy and church. Thank You for all who have helped me along the way. Bless them, Lord. Thank You for faith, freedom, health and work. Thank You for science and art and medicine, bicycles and satellites and all the material advancements that improve the quality of life. Thank You for the wonderful gift of my life, exactly the way it is. I embrace it as a priceless gift from You. And I thank You for the greatest gift of all — Your Son Jesus.</p>
+                     <blockquote>"Thanks be to God for this indescribable gift" (2 Corinthians 9:15).</blockquote>
+                     <blockquote>"You are the God who performs miracles; You display Your power among the peoples" (Psalm 77:14).</blockquote>
+                     <p>Amen!</p>
+                     <p>Lord, please give me Your blessing. Let Your light shine in me today.</p>
+                  </div>
+                  <p><small>(Scriptures for study: Ps 100:4, 2 Co 3:18, Lk 8:39, Ac 13:47, Da 12:3, Ps 126:3, Jn 1:16, 2 Co 9:8, 2 Pe 1:2, 2 Pe 3:18, Phm 7, Ps 91:11, Ps 90:17, Ps 29:11, Dt 23:5, Ps 107:22, 1 Th 5:18)</small></p>
+             </section>
+
+            <!-- ================== FOREWORD ================== -->
+            <section id="foreword">
+                <h2>Foreword</h2>
+                 <p><em>by Rev. Robert DeGrandis, SSJ</em></p>
+                 <p>In my travels around the world ministering to priests, religious and laity, I am always challenging people to pray. I have heard countless stories of miraculous turn-arounds of desperate circumstances when Christians begin to seriously pray. During my "Healing Power of Holy Orders" priest retreats I encourage the priests to be faithful to a daily holy hour. I am called to spend a minimum of two hours a day in prayer. I could not do the work to which the Lord has called me without this time with Him. Bishop Fulton Sheen, probably the most influential American Catholic priest in history, made a vow at ordination to spend an hour a day before the Blessed Sacrament. He was faithful to that commitment until the day he died. Sister Briege McKenna, O.S.C., who spends three hours a day in prayer, has one of the most powerful healing ministries in the world. You will find that those who are truly doing the Lord's work are committed to daily prayer. They know how powerless they are without God's grace. When we die and face our Lord I am convinced that we will never be sorry for the time spent in prayer. Most often, people on their deathbeds regret the lack of time spent in prayer.</p>
+                 <p>I believe this booklet, Miracle Hour, will be of great help not only to beginners but also to those in a mature walk with the Lord who struggle with their prayer time. It's a very balanced and effective approach to prayer that I highly recommend. Some of the prayers are condensed from books I have written, and are used with permission.</p>
+                 <p>May our Lord Jesus Christ bless you now, with a new gift of prayer.</p>
+                 <p><em>Rev. Robert DeGrandis, S.S.J.<br>New Orleans, LA</em></p>
+             </section>
+
+            <!-- ================== ABOUT AUTHOR ================== -->
+            <section id="about-author">
+                 <h2>About the Author</h2>
+                 <img src="linda_schubert_photo.jpg" alt="Photo of Linda Schubert" id="author-photo" />
+                 <p>LINDA SCHUBERT was born Linda Jane Vander Ploeg on November 7, 1937 in Los Angeles, California. She spent her early years with her family on her grandmother's 2400 acre mountaintop ranch on the Northern California coast, where her Dutch father owned the "Bear Trap Lumber Company."</p>
+                 <p>With no Christian training, Linda's earliest experiences of Jesus were feelings stirred in her heart at about age five when she would climb onto an old rope swing tied to an ancient oak tree and sing the beloved children's song, "Jesus loves me." She was to encounter that love at many times of trial after her family lost the ranch and moved from town to town across California where her father sought work as a building contractor. She learned at an early age to shield herself from the hurts of life by building protective walls around her heart. As she looks back on her many mistakes over the years, she reflects, "While my failures were 'legendary,' the love of God was even more legendary. No matter how much I ran from Him, He never let me go."</p>
+                 <p>Although she joined the Catholic Church in 1965, she did not have a heart conversion to the person of Jesus Christ until after the death of her stepson, Randy, in 1977, when she fell to her knees and prayed a prayer of surrender with Pat Robertson on the 700 Club television program. At that moment she knew, in the depths of her soul, "Jesus loves ME!" A whole new love for the Christian community and the Catholic Church began to blossom. She knew she would never again have to fight her personal battles alone. The Lord gave her a scripture that was to be her special verse: "I have set before you life and death, blessings and curses. Now CHOOSE LIFE..." (Deuteronomy 30:19). She came to know the Holy Spirit as her comforter, counselor and best friend, and the one who would bring her into that abundant life in which she chose to live. She discovered that with Him she didn't need to hide or build walls.</p>
+                 <p>Today, Linda is a lay leader in the Catholic Charismatic Renewal in San Jose, California, involved in writing, teaching, workshops and prayer ministry. Her personal testimony booklet, You Showed Me the Face of My Father, has touched the lives of many people. Since 1985 she has assisted Father Robert DeGrandis, S.S.J, in writing Renewed by the Holy Spirit, Coming to Life, Resting in the Spirit, Intergenerational Healing, Healing the Broken Heart, Praying for Miracles, The Gift of Miracles, Miracles of the Heart (which includes her testimony) and the new expanded edition of Healing Through the Mass. Several other books for Father DeGrandis are in process.</p>
+                 <p>Linda has ministered in the Philippines and in various parts of the United States, with ministry upcoming in Ireland, Florida and other places. She is known as the creator of the "moderately world famous" free hug coupon, which has been translated into 18 languages.</p>
+             </section>
+
+        </main>
+    </div>
+
+    <footer id="app-footer">
+        Please buy the hard copy at Amazon. (Legion of Mary - Our Lady of Divine Grace | noiz&may)
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const body = document.body;
+            const sidebar = document.getElementById('sidebar');
+            const hamburgerButton = document.getElementById('hamburger-button');
+            const themeToggleButton = document.getElementById('theme-toggle-button');
+            const fontIncreaseButton = document.getElementById('font-increase');
+            const fontDecreaseButton = document.getElementById('font-decrease');
+            const sidebarLinks = document.querySelectorAll('#sidebar a');
+            const contentSections = document.querySelectorAll('#content section[id]'); // For Scrollspy
+
+            // --- Constants and State Variables ---
+            const themes = ['dark', 'light', 'dark-blue', 'sky-blue'];
+            const FONT_STEP = 0.0625;
+            const MIN_FONT_SIZE_REM = 0.75;
+            const MAX_FONT_SIZE_REM = 1.5;
+            const DEFAULT_FONT_SIZE_REM = 1.0;
+            const DEFAULT_THEME = 'dark';
+
+            let currentThemeIndex = 0;
+            let currentFontSizeRem = DEFAULT_FONT_SIZE_REM;
+            let activeSectionId = null; // For Scrollspy tracking
+
+            // --- Initialization ---
+
+            // Theme Initialization
+            const savedTheme = localStorage.getItem('miracleHourTheme') || DEFAULT_THEME;
+            currentThemeIndex = themes.indexOf(savedTheme);
+            if (currentThemeIndex === -1) currentThemeIndex = themes.indexOf(DEFAULT_THEME);
+            applyTheme(themes[currentThemeIndex]);
+
+            // Font Size Initialization
+            const savedFontSize = localStorage.getItem('miracleHourFontSize');
+            currentFontSizeRem = savedFontSize ? parseFloat(savedFontSize) : DEFAULT_FONT_SIZE_REM;
+            applyFontSize(currentFontSizeRem); // Apply clamped size on load
+
+            // Scrollspy Setup
+            setupScrollspy();
+
+            // --- Core Functions ---
+
+            function applyTheme(themeName) {
+                body.className = ''; // Clear existing theme classes
+                body.classList.add(`theme-${themeName}`);
+                localStorage.setItem('miracleHourTheme', themeName);
+                themeToggleButton.textContent = `Theme: ${themeName.replace('-', ' ')}`;
+                currentThemeIndex = themes.indexOf(themeName);
+                // Update meta theme-color for browser UI consistency
+                const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+                if(themeColorMeta) {
+                    // Use try-catch as getComputedStyle might fail in edge cases or before layout
+                    try {
+                        const headerBg = getComputedStyle(document.getElementById('app-header')).backgroundColor;
+                        themeColorMeta.setAttribute('content', headerBg);
+                    } catch(e) {
+                        console.warn("Could not get header background color for theme-color meta tag.");
+                    }
+                }
+                console.log(`Theme applied: ${themeName}`);
+            }
+
+            function cycleTheme() {
+                currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+                applyTheme(themes[currentThemeIndex]);
+            }
+
+            function applyFontSize(sizeRem) {
+                const newSize = Math.max(MIN_FONT_SIZE_REM, Math.min(sizeRem, MAX_FONT_SIZE_REM));
+                document.documentElement.style.fontSize = `${newSize}rem`;
+                localStorage.setItem('miracleHourFontSize', newSize.toString()); // Store as string
+                currentFontSizeRem = newSize; // Update state *after* clamping
+                console.log(`Font size applied: ${newSize}rem`);
+            }
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('visible');
+                body.classList.toggle('sidebar-open');
+            }
+
+             function closeSidebar() {
+                 if (sidebar.classList.contains('visible')) {
+                    sidebar.classList.remove('visible');
+                    body.classList.remove('sidebar-open');
+                 }
+             }
+
+             // --- Scrollspy Functions ---
+             function setupScrollspy() {
+                 if (!('IntersectionObserver' in window)) {
+                     console.warn('Scrollspy requires IntersectionObserver.');
+                     return;
+                 };
+
+                 const observerOptions = {
+                     root: null, // relative to viewport
+                     // Adjust rootMargin: negative top margin means trigger earlier when scrolling down,
+                     // negative bottom means trigger later when scrolling up. -40% means the top 60% of the viewport is the trigger zone.
+                     rootMargin: '0px 0px -40% 0px',
+                     threshold: 0 // Trigger as soon as any part enters/leaves margin
+                 };
+
+                 const observerCallback = (entries) => {
+                    entries.forEach(entry => {
+                        const id = entry.target.getAttribute('id');
+                        const link = document.querySelector(`#sidebar a[href="#${id}"]`);
+                        if (!link) return;
+
+                        if (entry.isIntersecting) {
+                            // Remove active class from all links first
+                            sidebarLinks.forEach(l => l.classList.remove('active'));
+                            // Add active class to the intersecting one
+                            link.classList.add('active');
+                            activeSectionId = id; // Update tracked active ID
+                        } else {
+                            // Optional: Remove active class if it's the currently active one going out of view
+                            // This can cause jumpiness if multiple sections are in the margin zone.
+                            // A different approach (like finding the topmost visible section) might be better
+                            // but this simpler version works reasonably well with the adjusted rootMargin.
+                            // if (activeSectionId === id) {
+                            //    link.classList.remove('active');
+                            // }
+                        }
+                    });
+                 };
+
+                 const observer = new IntersectionObserver(observerCallback, observerOptions);
+                 contentSections.forEach(section => observer.observe(section));
+             }
+
+            // --- Event Listeners ---
+
+            hamburgerButton.addEventListener('click', (e) => { e.stopPropagation(); toggleSidebar(); });
+            themeToggleButton.addEventListener('click', cycleTheme);
+            fontIncreaseButton.addEventListener('click', () => applyFontSize(currentFontSizeRem + FONT_STEP));
+            fontDecreaseButton.addEventListener('click', () => applyFontSize(currentFontSizeRem - FONT_STEP));
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar(); });
+            });
+
+            document.addEventListener('click', (e) => {
+                 if (window.innerWidth <= 768 && sidebar.classList.contains('visible') && !sidebar.contains(e.target) && e.target !== hamburgerButton) {
+                    closeSidebar();
+                 }
+            });
+
+            // --- PWA Service Worker Registration ---
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./prayer_worker.js') // Path relative to HTML file
+                  .then((registration) => {
+                    console.log('[Main Script] Service Worker registered scope:', registration.scope);
+                  })
+                  .catch((error) => {
+                    console.error('[Main Script] Service Worker registration failed:', error);
+                  });
+              });
+            } else {
+              console.log('[Main Script] Service Worker not supported.');
+            }
+
+            console.log("Miracle Hour script initialized (PWA version - Complete).");
+        });
+    </script>
+
+</body>
+</html>
